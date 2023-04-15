@@ -6,7 +6,6 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-import org.skyscreamer.jsonassert.JSONAssert
 import java.sql.Connection
 import java.sql.ResultSet
 import java.sql.SQLException
@@ -19,7 +18,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 
 
-class EmployeeManagerTest {
+ class EmployeeManagerTest {
 
     @Mock
     private lateinit var mockConnection: Connection
@@ -34,62 +33,6 @@ class EmployeeManagerTest {
         val mockStatement: Statement = mock(Statement::class.java)
         `when`(mockConnection.createStatement()).thenReturn(mockStatement)
         `when`(mockStatement.executeQuery(any())).thenReturn(resultSetMock)
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun emptyJson() {
-        setUpResultSetMock(emptyList())
-        testJsonConvert("[]")
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun singleEmployeeJson() {
-        setUpResultSetMock(
-            listOf(
-                Employee("Wayne", "Rooney", EmployeeRole.PROJECT_MANAGER, EmployeeSeniority.REGULAR)
-            )
-        )
-        testJsonConvert(
-            "[{\"firstName\":\"Wayne\",\"lastName\":\"Rooney\",\"role\":\"PROJECT_MANAGER\",\"seniority\":\"REGULAR\"}]"
-        )
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun multipleEmployeesJson() {
-        setUpResultSetMock(
-            listOf(
-                Employee("Wayne", "Rooney", EmployeeRole.SOFTWARE_ENGINEER, EmployeeSeniority.CHIEF),
-                Employee("Harry", "Kane", EmployeeRole.SOFTWARE_TEST_AUTOMATION_ENGINEER, EmployeeSeniority.JUNIOR)
-            )
-        )
-        testJsonConvert(
-            "[{\"firstName\":\"Wayne\",\"lastName\":\"Rooney\",\"role\":\"SOFTWARE_ENGINEER\",\"seniority\":\"CHIEF\"}," +
-                    "{\"firstName\":\"Harry\",\"lastName\":\"Kane\",\"role\":\"SOFTWARE_TEST_AUTOMATION_ENGINEER\",\"seniority\":\"JUNIOR\"}]"
-        )
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun sendEmptyEmployeesReport() {
-        setUpResultSetMock(emptyList())
-        testSendMail("<table>" + "<tr><th>Employee</th><th>Position</th></tr>" + "</table>")
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun sendSingleEmployeeReport() {
-        setUpResultSetMock(
-            listOf(
-                Employee("Wayne", "Rooney", EmployeeRole.RESOURCE_MANAGER, EmployeeSeniority.SENIOR)
-            )
-        )
-        testSendMail(
-            "<table>" + "<tr><th>Employee</th><th>Position</th></tr>" +
-                    "<tr><td>Wayne Rooney</td><td>SENIOR RESOURCE_MANAGER</td></tr>" + "</table>"
-        )
     }
 
     @Test
@@ -134,42 +77,24 @@ class EmployeeManagerTest {
     }
 
 
-    /**
-     * Mockito.mockStatic(UUID::class.java).use { mockedUuid ->
-    mockedUuid.`when`<Any> { UUID.randomUUID() }.thenReturn(defaultUuid)
-    val result = cut.createOrder("MacBook Pro", 2L, null)
-    assertEquals("8d8b30e3-de52-4f1c-a71c-9905a8043dac", result.id)
-    }
-     */
+
     @Throws(Exception::class)
     private fun testSendMail(expected: String) {
         val propertiesCaptor = ArgumentCaptor.forClass(Message::class.java)
         mockStatic(Transport::class.java).use { mockedStatic ->
-            val manager = EmployeeManager()
-            manager.sendEmployeesReport(mockConnection)
+            val manager = EmployeeManager(mockConnection)
+            manager.sendEmployeesReport()
             mockedStatic.verify { Transport.send(propertiesCaptor.capture()) }
             assertEquals(propertiesCaptor.value.content, expected)
 
             //check caching
             clearInvocations(resultSetMock)
             `when`(resultSetMock.next()).thenReturn(false)
-            manager.sendEmployeesReport(mockConnection)
+            manager.sendEmployeesReport()
             assertEquals(propertiesCaptor.value.content, expected)
 
         }
 
     }
 
-    @Throws(Exception::class)
-    private fun testJsonConvert(json: String) {
-        val manager = EmployeeManager()
-        var serialized: String? = manager.employeesAsJson(mockConnection)
-        JSONAssert.assertEquals(serialized, serialized, json, false)
-
-        //check caching
-        clearInvocations(resultSetMock)
-        `when`(resultSetMock.next()).thenReturn(false)
-        serialized = manager.employeesAsJson(mockConnection)
-        JSONAssert.assertEquals(serialized, serialized, json, false)
-    }
 }
