@@ -1,7 +1,6 @@
 package com.itsz.cleandesign.srp
 
 object EmployeeReportBuilder {
-
     fun build(employees: List<Employee>):String{
         val builder = StringBuilder()
         builder.append("<table>").append("<tr><th>Employee</th><th>Position</th></tr>")

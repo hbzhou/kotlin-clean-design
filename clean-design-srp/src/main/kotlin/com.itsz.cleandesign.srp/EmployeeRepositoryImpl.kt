@@ -4,7 +4,6 @@ import java.sql.Connection
 import java.sql.SQLException
 
 class EmployeeRepositoryImpl(private val connection: Connection) : EmployeeRepository {
-
     override fun findAll(): List<Employee> {
         val employeeList = mutableListOf<Employee>()
         try {

@@ -1,6 +1,5 @@
 package com.itsz.cleandesign.srp
 
-import java.util.Properties
 import javax.mail.Message
 import javax.mail.MessagingException
 import javax.mail.Session
@@ -9,7 +8,6 @@ import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
 
 class EmailSendService {
-
     fun sendEmail(emailSendDto: EmailSendDto) {
         val properties = System.getProperties()
         properties.setProperty("mail.smtp.host","localhost")
