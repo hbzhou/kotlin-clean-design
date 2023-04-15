@@ -1,0 +1,9 @@
+package com.itsz.cleandesign.srp
+
+enum class EmployeeRole {
+    SOFTWARE_ENGINEER,
+    SOFTWARE_TEST_ENGINEER,
+    SOFTWARE_TEST_AUTOMATION_ENGINEER,
+    PROJECT_MANAGER,
+    RESOURCE_MANAGER
+}
