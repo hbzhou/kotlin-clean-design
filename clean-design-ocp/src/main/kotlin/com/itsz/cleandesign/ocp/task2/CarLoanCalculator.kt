@@ -13,7 +13,7 @@ class CarLoanCalculator : LoanCalculator {
     override fun calculate(age: Int, income: Int): Int {
         val loan = when {
             age > OLD_AGE -> BASE_LOAN + OLD_AGE_EXTRA_AMOUNT
-            age > ADULT_AGE -> BASE_LOAN + ADULT_AGE_EXTRA_AMOUNT
+            age in ADULT_AGE .. OLD_AGE -> BASE_LOAN + ADULT_AGE_EXTRA_AMOUNT
             else -> BASE_LOAN
         }
         return IncomeMultiplier.multiply(loan, income)
