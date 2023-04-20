@@ -3,7 +3,11 @@ package com.itsz.cleandesign.ocp.task1
 data class SkillsRecord(
     val skill: String,
     val level: Level,
-):Record()
+):Record() {
+    override fun format(): String {
+        return "skills: $skill=$level"
+    }
+}
 
 
 enum class Level {

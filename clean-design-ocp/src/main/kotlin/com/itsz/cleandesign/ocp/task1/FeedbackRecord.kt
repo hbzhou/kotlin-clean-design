@@ -7,6 +7,10 @@ enum class Quality {
 data class FeedbackRecord(
     val criterion: String,
     val quality: Quality,
-): Record()
+): Record() {
+    override fun format(): String {
+        return "feedback: $criterion=$quality"
+    }
+}
 
 

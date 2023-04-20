@@ -1,6 +1,6 @@
 package com.itsz.cleandesign.ocp.task1
 
 
-open class Record {
+ abstract class Record: Formatter {
      var id: String? = null
 }
