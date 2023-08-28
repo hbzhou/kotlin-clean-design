@@ -2,13 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.8.10"
-    application
 }
-
-group = "com.itsz"
-version = "1.0-SNAPSHOT"
-
-
 
 repositories {
     mavenCentral()
@@ -23,7 +17,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     testImplementation("org.mockito:mockito-core:5.2.0")
     testImplementation("org.skyscreamer:jsonassert:1.5.1")
-
 }
 
 tasks.test {
@@ -32,8 +25,4 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "17"
-}
-
-application {
-    mainClass.set("MainKt")
 }
