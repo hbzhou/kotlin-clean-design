@@ -24,8 +24,6 @@ dependencies {
     testImplementation("org.mockito:mockito-core:5.2.0")
     testImplementation("org.skyscreamer:jsonassert:1.5.1")
 
-
-
 }
 
 tasks.test {
@@ -33,7 +31,7 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "17"
 }
 
 application {
